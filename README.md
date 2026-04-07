@@ -1,24 +1,22 @@
-# Cyber_Task_HUD v2.0
+# Cyber_Task_HUD v3.0
 
-A high-performance, mobile-first task management interface designed with a cyberpunk aesthetic. Built for executors who require a minimal, distraction-free environment with persistent data logging.
+A customizable, high-performance task management interface. Version 3.0 introduces user-defined color profiles and enhanced cycle management.
 
-## ⚡ Features
-- **Persistent Storage**: Leverages `localStorage` to keep your tasks and encrypted logs safe across sessions.
-- **Mobile-First Design**: Touch-optimized targets (min 48px) and responsive grid layouts.
-- **Cyberpunk Aesthetic**: Neon-cyan/magenta color palette, scanline overlays, and glitch-inspired UI elements.
-- **Real-time Stats**: Live tracking of "Active Threads" vs "Cycles Complete."
-- **Encrypted Logs**: A dedicated scratchpad for long-form thought logging.
+## ⚡ New in v3.0
+- **System Initialization**: Users can now select their preferred HUD color profile (Cyan, Magenta, or Lime) upon first launch.
+- **Theme Persistence**: Your color selection is saved to `localStorage` alongside your tasks.
+- **Cycle Termination**: A new "Terminate Completed Cycles" protocol allows for bulk removal of finished objectives.
+- **Clean Slate**: The application now starts with a fresh, empty task list for every new user.
 
-## 🛠️ Tech Stack
-- **HTML5**: Semantic structure.
-- **CSS3**: Custom properties (variables), Flexbox/Grid, and Keyframe animations.
-- **JavaScript (Vanilla)**: DOM manipulation and LocalStorage API.
-- **Typography**: Google Fonts (Orbitron & JetBrains Mono).
+## 🛠️ Features
+- **Persistent Storage**: Tasks, logs, and themes remain saved across browser sessions.
+- **Mobile-First Design**: Optimized for touch interaction and responsive viewports.
+- **Cyberpunk Aesthetic**: Dynamic neon themes, scanline overlays, and monospace typography.
 
-## 🚀 Quick Start
+## 🚀 Installation
 1. Clone the repository.
 2. Open `index.html` in any modern browser.
-3. Add your objectives and start executing.
+3. Calibrate your HUD and begin initialization.
 
 ## 📝 License
-MIT License - Feel free to fork and customize for your own HUD.
+MIT License.
