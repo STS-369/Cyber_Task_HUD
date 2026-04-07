@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CYBER_TASKER // V1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0d0d0d;
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff00ff;
+            --neon-purple: #bc13fe;
+            --text: #e0e0e0;
+            --dim: #444;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains+Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+        }
+
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 2px; margin: 0; }
+
+        .glitch-header {
+            color: var(--neon-cyan);
+            text-shadow: 2px 2px var(--neon-magenta);
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--neon-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--dim);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--neon-magenta);
+        }
+
+        .stat-value { font-size: 1.5rem; color: var(--neon-cyan); font-weight: bold; }
+        .stat-label { font-size: 0.6rem; color: var(--dim); margin-top: 5px; }
+
+        .section-label { font-size: 0.8rem; color: var(--neon-magenta); margin-bottom: 15px; display: block; }
+
+        .task-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], textarea {
+            background: #1a1a1a;
+            border: 1px solid var(--dim);
+            color: var(--text);
+            padding: 12px;
+            font-family: inherit;
+            width: 100%;
+            outline: none;
+        }
+
+        input[type="text"]:focus { border-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); }
+
+        .btn-add {
+            background: var(--neon-cyan);
+            color: black;
+            border: none;
+            padding: 0 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .task-list { list-style: none; padding: 0; margin: 0; }
+
+        .task-item {
+            background: var(--panel);
+            border: 1px solid #222;
+            margin-bottom: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            min-height: 55px;
+            cursor: pointer;
+        }
+
+        .task-item.completed {
+            border-color: var(--neon-purple);
+            opacity: 0.6;
+            text-decoration: line-through;
+            box-shadow: none;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .completed .checkbox {
+            background: var(--neon-magenta);
+            border-color: var(--neon-magenta);
+        }
+
+        .completed .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+        }
+
+        .notes-area {
+            margin-top: 30px;
+            border-top: 1px solid var(--dim);
+            padding-top: 20px;
+        }
+
+        textarea {
+            height: 150px;
+            resize: none;
+            border-left: 3px solid var(--neon-purple);
+        }
+
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 243, 255, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: fixed;
+            bottom: 100%;
+            left: 0;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        .delete-btn {
+            margin-left: auto;
+            color: #ff4444;
+            font-size: 0.8rem;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+
+    <header class="glitch-header">
+        <div>SYSTEM_DASH // ALICE</div>
+        <div id="clock">00:00</div>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" id="count-active">0</div>
+            <div class="stat-label">ACTIVE_THREADS</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="count-done">0</div>
+            <div class="stat-label">CYCLES_COMPLETE</div>
+        </div>
+    </div>
+
+    <span class="section-label">> INITIALIZE_NEW_TASK</span>
+    <div class="task-input-container">
+        <input type="text" id="task-input" placeholder="Enter objective..." autocomplete="off">
+        <button class="btn-add" onclick="addTask()">ADD</button>
+    </div>
+
+    <span class="section-label">> PRIORITY_QUEUE</span>
+    <ul class="task-list" id="task-list"></ul>
+
+    <div class="notes-area">
+        <span class="section-label">> ENCRYPTED_NOTES</span>
+        <textarea id="notes-input" placeholder="Log thoughts here..." oninput="saveNotes()"></textarea>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+        
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function render() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            
+            let active = 0;
+            let done = 0;
+
+            tasks.forEach((task, index) => {
+                if (task.completed) done++; else active++;
+
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                li.innerHTML = `
+                    <div class="checkbox"></div>
+                    <span>${task.text}</span>
+                    <div class="delete-btn" onclick="deleteTask(event, ${index})">[DEL]</div>
+                `;
+                li.onclick = () => toggleTask(index);
+                list.appendChild(li);
+            });
+
+            document.getElementById('count-active').innerText = active;
+            document.getElementById('count-done').innerText = done;
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+        }
+
+        function addTask() {
+            const input = document.getElementById('task-input');
+            if (input.value.trim()) {
+                tasks.push({ text: input.value, completed: false });
+                input.value = '';
+                render();
+            }
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            render();
+        }
+
+        function deleteTask(event, index) {
+            event.stopPropagation();
+            tasks.splice(index, 1);
+            render();
+        }
+
+        function saveNotes() {
+            localStorage.setItem('cyber_notes', document.getElementById('notes-input').value);
+        }
+
+        // Load initial data
+        document.getElementById('notes-input').value = localStorage.getItem('cyber_notes') || '';
+        render();
+
+        // Handle Enter key
+        document.getElementById('task-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+    </script>
+</body>
+</html>
